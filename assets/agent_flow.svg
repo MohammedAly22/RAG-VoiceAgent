@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="600" viewBox="0 0 900 600" font-family="'Segoe UI',system-ui,sans-serif">
+  <defs>
+    <marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#94a3b8"/>
+    </marker>
+    <style>
+      .n{fill:#ffffff;stroke:#cbd5e1;stroke-width:1.5}
+      .router{fill:#eff6ff;stroke:#93c5fd;stroke-width:1.5}
+      .tool{fill:#f0fdf4;stroke:#86efac;stroke-width:1.5}
+      .term{fill:#fefce8;stroke:#fde047;stroke-width:1.5}
+      .bad{fill:#fef2f2;stroke:#fca5a5;stroke-width:1.5}
+      .t{font-size:13.5px;font-weight:700;fill:#0f172a}
+      .s{font-size:11px;fill:#475569}
+      .f{stroke:#94a3b8;stroke-width:1.6;fill:none}
+      .lbl{font-size:11px;fill:#2563eb;font-weight:700}
+    </style>
+  </defs>
+  <rect x="0" y="0" width="900" height="600" fill="#f8fafc"/>
+
+  <!-- user -->
+  <rect x="360" y="20" width="180" height="52" rx="12" class="n"/>
+  <text x="450" y="44" class="t" text-anchor="middle">👤 user query</text>
+  <text x="450" y="62" class="s" text-anchor="middle">chat · voice · livekit</text>
+  <line x1="450" y1="72" x2="450" y2="104" class="f" marker-end="url(#a)"/>
+
+  <!-- router -->
+  <rect x="330" y="106" width="240" height="66" rx="12" class="router"/>
+  <text x="450" y="132" class="t" text-anchor="middle">🧭 router  ( _is_social /</text>
+  <text x="450" y="152" class="t" text-anchor="middle">_is_memory_question )</text>
+  <text x="450" y="167" class="s" text-anchor="middle">decides: skip KB or retrieve</text>
+
+  <!-- three branches -->
+  <line x1="380" y1="172" x2="150" y2="228" class="f" marker-end="url(#a)"/>
+  <text x="228" y="200" class="lbl">social</text>
+  <line x1="450" y1="172" x2="450" y2="228" class="f" marker-end="url(#a)"/>
+  <text x="470" y="200" class="lbl">memory</text>
+  <line x1="520" y1="172" x2="740" y2="228" class="f" marker-end="url(#a)"/>
+  <text x="640" y="200" class="lbl">knowledge question</text>
+
+  <!-- social -->
+  <rect x="40" y="230" width="220" height="66" rx="12" class="n"/>
+  <text x="150" y="256" class="t" text-anchor="middle">persona reply</text>
+  <text x="150" y="276" class="s" text-anchor="middle">greeting / thanks —</text>
+  <text x="150" y="291" class="s" text-anchor="middle">no retrieval, Egyptian dialect</text>
+
+  <!-- memory -->
+  <rect x="340" y="230" width="220" height="66" rx="12" class="n"/>
+  <text x="450" y="256" class="t" text-anchor="middle">answer from history</text>
+  <text x="450" y="276" class="s" text-anchor="middle">"انا اسمي ايه؟" → uses</text>
+  <text x="450" y="291" class="s" text-anchor="middle">conversation memory, no KB</text>
+
+  <!-- retrieve tool -->
+  <rect x="640" y="230" width="220" height="66" rx="12" class="tool"/>
+  <text x="750" y="256" class="t" text-anchor="middle">🔧 retrieve_kb(query)</text>
+  <text x="750" y="276" class="s" text-anchor="middle">FAISS dense + BM25 hybrid</text>
+  <text x="750" y="291" class="s" text-anchor="middle">top-k, score-thresholded</text>
+
+  <line x1="750" y1="296" x2="750" y2="330" class="f" marker-end="url(#a)"/>
+  <!-- decision hits? -->
+  <rect x="660" y="332" width="180" height="46" rx="10" class="router"/>
+  <text x="750" y="360" class="t" text-anchor="middle">relevant context?</text>
+
+  <line x1="705" y1="378" x2="640" y2="420" class="f" marker-end="url(#a)"/>
+  <text x="600" y="404" class="lbl">yes</text>
+  <line x1="795" y1="378" x2="835" y2="420" class="f" marker-end="url(#a)"/>
+  <text x="838" y="404" class="lbl">no</text>
+
+  <!-- generate grounded -->
+  <rect x="440" y="422" width="230" height="70" rx="12" class="term"/>
+  <text x="555" y="448" class="t" text-anchor="middle">✅ grounded answer</text>
+  <text x="555" y="468" class="s" text-anchor="middle">stream tokens · citations</text>
+  <text x="555" y="484" class="s" text-anchor="middle">(stripped before TTS)</text>
+
+  <!-- refuse -->
+  <rect x="700" y="422" width="180" height="70" rx="12" class="bad"/>
+  <text x="790" y="448" class="t" text-anchor="middle">🚫 refuse</text>
+  <text x="790" y="468" class="s" text-anchor="middle">"مش موجود عندي" —</text>
+  <text x="790" y="484" class="s" text-anchor="middle">no guessing, no docs</text>
+
+  <!-- LLM stream note -->
+  <line x1="450" y1="296" x2="500" y2="422" class="f" marker-end="url(#a)" stroke-dasharray="4 4"/>
+  <line x1="150" y1="296" x2="480" y2="425" class="f" marker-end="url(#a)" stroke-dasharray="4 4"/>
+
+  <!-- LLM box -->
+  <rect x="150" y="516" width="600" height="66" rx="12" class="n"/>
+  <text x="450" y="542" class="t" text-anchor="middle">🧠 LLM — true token streaming (agent/llm.astream_tokens)</text>
+  <text x="450" y="562" class="s" text-anchor="middle">Gemini 2.5 Flash (thinking off) · or local vLLM · sentence-streamed to TTS on voice</text>
+  <line x1="450" y1="492" x2="450" y2="516" class="f" marker-end="url(#a)"/>
+
+  <text x="40" y="540" class="s">LiveKit tools:</text>
+  <text x="40" y="558" class="s">retrieve_kb,</text>
+  <text x="40" y="574" class="s">get_order_status</text>
+</svg>

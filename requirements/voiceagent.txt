@@ -1,0 +1,48 @@
+# =============================================================================
+# Voice Agent · conda env "voiceagent" (Python 3.11)
+# Runs: the FastAPI app, the LangGraph RAG agent, multimodal ingestion,
+#       the EoU service, and the LiveKit agent worker.
+#
+# Install:
+#   conda create -n voiceagent python=3.11 -y && conda activate voiceagent
+#   pip install -r requirements/voiceagent.txt
+#
+# ASR runs in the `test-qwen` env, TTS in `omnivoice`, local vLLM in `test-qwen`.
+# =============================================================================
+
+# --- web app / API / realtime ---
+fastapi
+uvicorn[standard]
+websockets
+python-multipart
+pydantic>=2
+pyyaml
+requests
+numpy
+
+# --- agent / RAG ---
+langgraph
+langchain-core
+langchain-google-genai
+google-genai                 # Gemini (LLM + multimodal vision at ingest)
+faiss-cpu
+sentence-transformers        # multilingual-e5 embeddings (Arabic-capable)
+rank-bm25                    # sparse retrieval for hybrid search
+
+# --- document loaders (multimodal RAG) ---
+pypdf
+pdfplumber                  # tables
+python-docx
+pymupdf                     # (fitz) render PDF page screenshots + extract images
+pillow
+
+# NOTE: the ASR (`test-qwen`) and TTS (`omnivoice`) envs must ALSO have
+# `websockets` installed — uvicorn silently 404s WebSocket routes without a
+# websocket implementation, which breaks streaming ASR/TTS:
+#     pip install "websockets>=12"     # in test-qwen and omnivoice
+
+# --- realtime voice (Section 1) ---
+livekit-agents
+livekit-plugins-silero      # VAD
+livekit-plugins-turn-detector   # multilingual end-of-utterance
+soundfile

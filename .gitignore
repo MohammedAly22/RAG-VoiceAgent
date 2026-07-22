@@ -1,0 +1,53 @@
+# ---- secrets ----
+.env
+
+# ---- python ----
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.ipynb_checkpoints/
+
+# ---- node / UI build ----
+node_modules/
+node_modules
+frontend-react/dist/
+frontend-react/node_modules
+frontend-react/node_modules/
+
+# ---- docs (contains the proprietary assignment PDF; diagrams live in assets/) ----
+docs/
+
+# ---- generated / runtime data (only data/kb/*.md + the restaurant PDF are tracked) ----
+data/vectorstore/
+data/pages/
+data/uploads/
+data/logs/
+data/recordings/
+data/kb/_assets/
+data/*.sqlite
+data/*.sqlite-*
+
+# ---- media / recordings (videos & audio dumps) ----
+*.mp4
+*.mov
+*.webm
+*.mkv
+*.avi
+*.wav
+*.mp3
+
+# ---- logs & model caches ----
+*.log
+models/
+*.bin
+*.safetensors
+
+# ---- OS / editor ----
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ---- vendored/downloaded binaries ----
+bin/livekit-server

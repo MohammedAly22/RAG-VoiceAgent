@@ -1,0 +1,32 @@
+# =============================================================================
+# Voice Agent · conda env "omnivoice"  (Python 3.10)
+# Reused from the Sano stack. Runs, in THIS project:
+#   • the TTS service only  (VoiceTut-TTS / OmniVoice 0.6B — 17 Arabic voices)
+#
+# Kept in a SEPARATE env from test-qwen because VoiceTut pins a different
+# torch/transformers stack than vLLM.
+#
+# Install order:
+#   1. conda create -n omnivoice python=3.10 -y && conda activate omnivoice
+#   2. pip install torch==2.8.0 torchaudio==2.8.0 \
+#        --index-url https://download.pytorch.org/whl/cu128
+#   3. pip install -r requirements/omnivoice.txt
+#   4. pip install "websockets>=12"   # uvicorn 404s WS routes without it
+#      (this is what broke TTS streaming until installed — see NOTES.md)
+# =============================================================================
+
+# --- the TTS model package ---
+voicetut-tts==0.1.1
+transformers==5.12.1
+accelerate==1.14.0
+
+# --- service API ---
+fastapi==0.138.0
+uvicorn==0.49.0
+websockets>=12
+pydantic==2.13.4
+
+# --- audio / utils ---
+soundfile==0.14.0
+numpy==1.26.4
+requests==2.34.2

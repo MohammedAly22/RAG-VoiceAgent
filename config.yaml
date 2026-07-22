@@ -1,0 +1,122 @@
+system:
+  app_name: Voice Agent
+  brand: Electro-Pi
+  language: ar
+  gpu_device: 0
+server:
+  host: 0.0.0.0
+  port: 8080
+agent:
+  name: مساعد مطعم المصري الاصيل
+  category: restaurant
+  configured: true
+  system_prompt: أنت مساعد ذكي لمطعم. مهمتك الإجابة على أسئلة العملاء حول المنيو والأصناف والأسعار ومواعيد
+    العمل والعروض وسياسات التوصيل والحجز، بالاعتماد **فقط** على قاعدة المعرفة. تكلّم بالعربية بأسلوب مهذب
+    وودود ومختصر. لو السؤال خارج نطاق المطعم أو مش موجود في قاعدة المعرفة، اعتذر بلطف ووضّح إنك تساعد
+    فقط في أسئلة المطعم.
+  greeting: أهلاً بيك في مطعم المصري الاصيل! اسألني عن المنيو أو الأسعار أو المواعيد أو أي حاجة تخص المطعم.
+llm:
+  backend: gemini
+  temperature: 0.3
+  max_tokens: 1024
+  gemini:
+    model: gemini-2.5-flash
+  vllm:
+    model_path: Qwen/Qwen2.5-3B-Instruct
+    served_model_name: voiceagent-llm
+    conda_env: test-qwen
+    dtype: auto
+    quantization: null
+    gpu_memory_utilization: 0.55
+    max_model_len: 8192
+    host: 127.0.0.1
+    port: 8011
+    base_url: http://127.0.0.1:8011/v1
+rag:
+  embedding_model: intfloat/multilingual-e5-small
+  embedding_device: cpu
+  vector_store: faiss
+  index_dir: ./data/vectorstore
+  chunk_size: 800
+  chunk_overlap: 120
+  top_k: 5
+  score_threshold: 0.3
+  hybrid: true
+  multimodal: true
+  pages_dir: ./data/pages
+asr:
+  provider: gemini
+  gemini_model: gemini-2.5-flash
+  model_id: mohammedaly22/QwenCleo-ASR
+  conda_env: test-qwen
+  device: cuda:0
+  dtype: float16
+  language: Arabic
+  sample_rate: 16000
+  chunk_seconds: 1.5
+  silence_rms: 0.008
+  host: 127.0.0.1
+  port: 8021
+tts:
+  engine: lahgtna
+  model_id: mohammedaly22/VoiceTut-TTS
+  lahgtna_model_id: oddadmix/lahgtna-omnivoice-v2
+  lahgtna_language: eg
+  conda_env: omnivoice
+  device: cuda
+  dtype: float16
+  sample_rate: 24000
+  active_voice: Sayed
+  num_step: 16
+  guidance_scale: 2.5
+  speed: 1.0
+  host: 127.0.0.1
+  port: 8022
+eou:
+  enabled: true
+  model: livekit/turn-detector
+  language: ar
+  min_silence_ms: 700
+  threshold: 0.55
+  host: 127.0.0.1
+  port: 8023
+livekit:
+  url: ws://127.0.0.1:7880
+  room_prefix: voiceagent-
+  allow_interruptions: true
+  min_interruption_duration: 0.5
+categories:
+- id: restaurant
+  label: مساعد مطعم
+  prompt: 'أنت مساعد ذكي لمطعم. مهمتك الإجابة على أسئلة العملاء حول المنيو والأصناف والأسعار ومواعيد العمل
+    والعروض وسياسات التوصيل والحجز، بالاعتماد **فقط** على قاعدة المعرفة. تكلّم بالعربية بأسلوب مهذب وودود
+    ومختصر. لو السؤال خارج نطاق المطعم أو مش موجود في قاعدة المعرفة، اعتذر بلطف ووضّح إنك تساعد فقط في
+    أسئلة المطعم.
+
+    '
+- id: customer_service
+  label: خدمة عملاء
+  prompt: 'أنت ممثل خدمة عملاء ذكي. تجاوب على استفسارات العملاء حول المنتجات والطلبات وسياسات الاسترجاع
+    والاستبدال وأوقات الدعم، بالاعتماد **فقط** على قاعدة المعرفة. أسلوبك مهذب ومتعاطف ومباشر. لو المعلومة
+    مش موجودة في قاعدة المعرفة، قل ذلك بصراحة ولا تخمّن.
+
+    '
+- id: healthcare
+  label: مساعد عيادة
+  prompt: 'أنت مساعد استقبال ذكي لعيادة. تجاوب على أسئلة المرضى حول المواعيد والخدمات والتحضيرات قبل الكشف،
+    بالاعتماد **فقط** على قاعدة المعرفة. لا تقدّم تشخيصاً أو نصيحة طبية. لو السؤال طبي أو خارج قاعدة المعرفة،
+    انصح بالتواصل مع الطبيب.
+
+    '
+- id: education
+  label: مساعد تعليمي
+  prompt: 'أنت مساعد تعليمي ذكي. تشرح وتجاوب على أسئلة الطلاب بالاعتماد **فقط** على المواد والمستندات
+    في قاعدة المعرفة، بأسلوب مبسّط وواضح. لو السؤال خارج المنهج المرفوع، وضّح ذلك بدل ما تخمّن.
+
+    '
+- id: other
+  label: غير ذلك (مخصص)
+  prompt: ''
+logging:
+  logs_dir: ./data/logs
+  level: INFO
