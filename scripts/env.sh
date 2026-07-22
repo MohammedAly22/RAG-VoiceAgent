@@ -12,16 +12,22 @@ mkdir -p "$VA_LOGS"
 # --- GPU ---
 export VA_GPU="${VA_GPU:-0}"
 
-# --- conda envs (verified present on this box) ---
-export ENV_APP="voiceagent"     # FastAPI app + LangGraph + RAG + LiveKit worker
-export ENV_ASR="test-qwen"      # qwencleo-asr
-export ENV_TTS="omnivoice"      # voicetut-tts
-export ENV_LLM="test-qwen"      # vLLM (local LLM path)
-export ENV_NODE="node-env"      # dedicated conda env with Node 20 for the React build
-                                # create it with:  conda create -n node-env nodejs=20 -y
+# --- conda env names (create them per the README; override via env vars if needed) ---
+export ENV_APP="${ENV_APP:-voiceagent}"   # FastAPI app + LangGraph + RAG + LiveKit worker
+export ENV_ASR="${ENV_ASR:-test-qwen}"    # qwencleo-asr
+export ENV_TTS="${ENV_TTS:-omnivoice}"    # voicetut-tts
+export ENV_LLM="${ENV_LLM:-test-qwen}"    # vLLM (local LLM path)
+export ENV_NODE="${ENV_NODE:-node-env}"   # dedicated conda env with Node 20 for the React build
+                                          # create it with:  conda create -n node-env nodejs=20 -y
 
-# --- conda python launchers ---
-CONDA_BASE="$(conda info --base 2>/dev/null || echo /home/ahmed/miniconda3)"
+# --- conda base (portable: ask conda, else common per-user install locations) ---
+CONDA_BASE="$(conda info --base 2>/dev/null || true)"
+if [ -z "$CONDA_BASE" ]; then
+  for d in "$HOME/miniconda3" "$HOME/anaconda3" "$HOME/miniforge3" "$HOME/mambaforge" /opt/conda; do
+    [ -d "$d" ] && { CONDA_BASE="$d"; break; }
+  done
+fi
+: "${CONDA_BASE:=$HOME/miniconda3}"       # last-resort default (no hardcoded username)
 py()   { echo "$CONDA_BASE/envs/$1/bin/python"; }
 # Node bin dir: use the dedicated `node-env` conda env (see README step 3). If it
 # isn't created yet, fall back to any `node` on PATH (nvm/system) so it still works.
