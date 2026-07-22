@@ -157,7 +157,7 @@ bash scripts/build_ui.sh           # → frontend-react/dist (served by the app 
 >   any `node` on your `PATH` if `node-env` doesn't exist.
 > - Hot-reload dev server (optional): `bash scripts/dev_ui.sh`.
 
-### 4️⃣ Ingest the seed knowledge base (Abou El Sid restaurant — included)
+### 4️⃣ Ingest the seed knowledge base
 
 ```bash
 conda activate voiceagent
