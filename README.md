@@ -157,18 +157,19 @@ bash scripts/build_ui.sh           # → frontend-react/dist (served by the app 
 >   any `node` on your `PATH` if `node-env` doesn't exist.
 > - Hot-reload dev server (optional): `bash scripts/dev_ui.sh`.
 
-### 4️⃣ Ingest the seed knowledge base
+### 4️⃣ Knowledge base — ingested automatically ✨
 
-```bash
-conda activate voiceagent
-bash scripts/ingest.sh             # chunks + embeds data/kb/ → FAISS index in data/vectorstore/
-```
+**No manual step needed.** On its **first launch**, the app auto-ingests the seed documents in
+`data/kb/` (the Abou El Sid restaurant pack — 3 Markdown files + a PDF) into the FAISS index. After
+that you add/remove documents live from the **Data** tab in the UI (drag-and-drop → chunk → embed).
 
-> First run downloads the `multilingual-e5-small` embedder (~120 MB). If the download is flaky,
-> run `bash scripts/prepare_embedder.sh` (retries + mirror fallback) first.
+> - First ingest downloads the `multilingual-e5-small` embedder (~120 MB). If the download is flaky,
+>   run `bash scripts/prepare_embedder.sh` first (retries + mirror fallback).
+> - Prefer to (re)build the index from the CLI? It's still available: `bash scripts/ingest.sh [path…]`.
 
-✅ **At this point the default stack works** — chat + RAG + voice-via-Gemini, no GPU. Jump to
-[Running the system](#-running-the-system). The next two envs are only for local models.
+✅ **At this point the default stack works** — start the app and it ingests the KB itself; you get
+chat + RAG + voice-via-Gemini, no GPU. Jump to [Running the system](#-running-the-system). The next
+two envs are only for local models.
 
 ---
 
