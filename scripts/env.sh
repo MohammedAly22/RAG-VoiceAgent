@@ -17,14 +17,14 @@ export ENV_APP="voiceagent"     # FastAPI app + LangGraph + RAG + LiveKit worker
 export ENV_ASR="test-qwen"      # qwencleo-asr
 export ENV_TTS="omnivoice"      # voicetut-tts
 export ENV_LLM="test-qwen"      # vLLM (local LLM path)
-export ENV_NODE="sano-node"     # node 20 for the React build
+export ENV_NODE="node-env"      # dedicated conda env with Node 20 for the React build
+                                # create it with:  conda create -n node-env nodejs=20 -y
 
 # --- conda python launchers ---
 CONDA_BASE="$(conda info --base 2>/dev/null || echo /home/ahmed/miniconda3)"
 py()   { echo "$CONDA_BASE/envs/$1/bin/python"; }
-# Node bin dir: prefer a dedicated conda env if present, else whatever `node` is
-# on PATH (system, nvm, or `conda install -n voiceagent nodejs`). Portable across
-# machines that don't have the dev box's "sano-node" env.
+# Node bin dir: use the dedicated `node-env` conda env (see README step 3). If it
+# isn't created yet, fall back to any `node` on PATH (nvm/system) so it still works.
 node_bin() {
   local d="$CONDA_BASE/envs/$ENV_NODE/bin"
   if [ -x "$d/node" ]; then echo "$d"

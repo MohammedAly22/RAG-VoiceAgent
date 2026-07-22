@@ -83,15 +83,16 @@ cd RAG-VoiceAgent
 
 ### About the conda environments
 
-The stack uses **three separate conda envs** (mirrors the Sano layout). They're separate on
-purpose: vLLM/QwenCleo and VoiceTut pin **incompatible torch builds**, so keeping them apart
-avoids dependency hell. Only the first one is required for the default (Gemini) path.
+The stack uses **separate conda envs** on purpose: vLLM/QwenCleo and VoiceTut pin **incompatible
+torch builds**, and Node is kept out of the Python envs entirely. Only `voiceagent` + `node-env`
+are needed for the default (Gemini) path.
 
-| env | Python | GPU? | Runs | Required? |
+| env | Python / Node | GPU? | Runs | Required? |
 |---|:--:|:--:|---|:--:|
-| **`voiceagent`** | 3.11 | no | FastAPI app · LangGraph RAG · ingestion · EoU · LiveKit worker | ✅ **required** |
-| **`omnivoice`** | 3.10 | yes | **TTS** (VoiceTut / OmniVoice, 17 voices) | optional (spoken output) |
-| **`test-qwen`** | 3.12 | yes | QwenCleo **ASR** · local **vLLM** LLM · quantization benchmark | optional (local models) |
+| **`voiceagent`** | Python 3.11 | no | FastAPI app · LangGraph RAG · ingestion · EoU · LiveKit worker | ✅ **required** |
+| **`node-env`** | Node 20 | no | building / dev-serving the React UI | ✅ **required** (to build the UI) |
+| **`omnivoice`** | Python 3.10 | yes | **TTS** (VoiceTut / OmniVoice, 17 voices) | optional (spoken output) |
+| **`test-qwen`** | Python 3.12 | yes | QwenCleo **ASR** · local **vLLM** LLM · quantization benchmark | optional (local models) |
 
 > **Don't have conda?** Install Miniconda first:
 > ```bash
@@ -134,22 +135,27 @@ cp .env.example .env
 Get a key at **https://aistudio.google.com/app/apikey**. This one key powers the default LLM,
 the (optional) Gemini ASR, and the multimodal vision-captioning at ingest.
 
-### 3️⃣ Build the UI
+### 3️⃣ Build the UI (create the `node-env` conda env)
 
-Needs **Node 18+** (`node -v`). If you don't have it, install it into the app env:
+The React UI is built with **Node 20**, kept in its **own conda env** called `node-env`
+(the build/dev scripts look for exactly this env). Create it once:
 
 ```bash
-conda install -n voiceagent nodejs=20 -y     # or use nvm / your package manager
+conda create -n node-env nodejs=20 -y
 ```
 
-Then build — the script **auto-installs** the npm dependencies (incl. `vite`) on first run:
+Then build — no need to `conda activate` it; `scripts/build_ui.sh` finds `node-env` automatically
+and **auto-installs** the npm dependencies (incl. `vite`) on first run:
 
 ```bash
 bash scripts/build_ui.sh           # → frontend-react/dist (served by the app at :8080)
 ```
 
-> The repo does **not** ship `node_modules` (it's gitignored), so the first build downloads UI
-> deps — this is normal and only happens once.
+> - The repo does **not** ship `node_modules` (it's gitignored), so the first build downloads UI
+>   deps — normal, happens once.
+> - Prefer `nvm` or system Node instead of a conda env? That works too — the scripts fall back to
+>   any `node` on your `PATH` if `node-env` doesn't exist.
+> - Hot-reload dev server (optional): `bash scripts/dev_ui.sh`.
 
 ### 4️⃣ Ingest the seed knowledge base (Abou El Sid restaurant — included)
 
