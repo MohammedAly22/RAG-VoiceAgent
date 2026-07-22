@@ -7,14 +7,11 @@ server:
   host: 0.0.0.0
   port: 8080
 agent:
-  name: مساعد مطعم المصري الاصيل
-  category: restaurant
-  configured: true
-  system_prompt: أنت مساعد ذكي لمطعم. مهمتك الإجابة على أسئلة العملاء حول المنيو والأصناف والأسعار ومواعيد
-    العمل والعروض وسياسات التوصيل والحجز، بالاعتماد **فقط** على قاعدة المعرفة. تكلّم بالعربية بأسلوب مهذب
-    وودود ومختصر. لو السؤال خارج نطاق المطعم أو مش موجود في قاعدة المعرفة، اعتذر بلطف ووضّح إنك تساعد
-    فقط في أسئلة المطعم.
-  greeting: أهلاً بيك في مطعم المصري الاصيل! اسألني عن المنيو أو الأسعار أو المواعيد أو أي حاجة تخص المطعم.
+  name: ''
+  category: ''
+  configured: false          # fresh launch → Setup wizard (pick business, prompt, upload data)
+  system_prompt: ''
+  greeting: ''
 llm:
   backend: gemini
   temperature: 0.3

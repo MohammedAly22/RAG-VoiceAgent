@@ -56,33 +56,12 @@ DIST = ROOT / "frontend-react" / "dist"
 app = FastAPI(title="Voice Agent")
 
 
-def _bootstrap():
-    """On first launch, auto-ingest the seed knowledge base (data/kb/) if the
-    index is empty — so a fresh clone just needs `start_app.sh`, no manual ingest
-    step. Users can add/remove documents live from the Data tab afterwards."""
-    try:
-        store = get_store()
-        if not store.chunks:                       # empty index
-            from rag.ingest import ingest_paths, SUPPORTED
-            kb = Path(abspath("data/kb"))
-            files = [f for f in kb.glob("*") if f.suffix.lower() in SUPPORTED] if kb.exists() else []
-            if files:
-                log.info("empty index — auto-ingesting %d seed document(s) from %s …",
-                         len(files), kb)
-                n = ingest_paths([str(kb)])
-                log.info("auto-ingest complete: %d chunks indexed", n)
-            else:
-                log.info("empty index and no seed documents in %s — upload via the Data tab", kb)
-    except Exception as e:  # noqa: BLE001
-        log.warning("auto-ingest skipped: %s", e)
-    agentgraph.warmup()
-
-
 @app.on_event("startup")
 async def _startup():
     import asyncio
-    # ingest seed KB (if needed) + warm the embedder/LLM, off the event loop
-    asyncio.get_event_loop().run_in_executor(None, _bootstrap)
+    # The knowledge base starts EMPTY — the user uploads their own documents during
+    # the Setup wizard (or the Data tab). We only warm the embedder + LLM here.
+    asyncio.get_event_loop().run_in_executor(None, agentgraph.warmup)
 
 
 # ---------------------------------------------------------------------------
