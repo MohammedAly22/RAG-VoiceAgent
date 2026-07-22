@@ -136,12 +136,20 @@ the (optional) Gemini ASR, and the multimodal vision-captioning at ingest.
 
 ### 3️⃣ Build the UI
 
-Needs **Node 18+** (`node -v`). If you don't have it: `conda install -n voiceagent nodejs=20 -y`
-or use `nvm`.
+Needs **Node 18+** (`node -v`). If you don't have it, install it into the app env:
+
+```bash
+conda install -n voiceagent nodejs=20 -y     # or use nvm / your package manager
+```
+
+Then build — the script **auto-installs** the npm dependencies (incl. `vite`) on first run:
 
 ```bash
 bash scripts/build_ui.sh           # → frontend-react/dist (served by the app at :8080)
 ```
+
+> The repo does **not** ship `node_modules` (it's gitignored), so the first build downloads UI
+> deps — this is normal and only happens once.
 
 ### 4️⃣ Ingest the seed knowledge base (Abou El Sid restaurant — included)
 

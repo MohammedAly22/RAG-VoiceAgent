@@ -22,7 +22,15 @@ export ENV_NODE="sano-node"     # node 20 for the React build
 # --- conda python launchers ---
 CONDA_BASE="$(conda info --base 2>/dev/null || echo /home/ahmed/miniconda3)"
 py()   { echo "$CONDA_BASE/envs/$1/bin/python"; }
-node_bin() { echo "$CONDA_BASE/envs/$ENV_NODE/bin"; }
+# Node bin dir: prefer a dedicated conda env if present, else whatever `node` is
+# on PATH (system, nvm, or `conda install -n voiceagent nodejs`). Portable across
+# machines that don't have the dev box's "sano-node" env.
+node_bin() {
+  local d="$CONDA_BASE/envs/$ENV_NODE/bin"
+  if [ -x "$d/node" ]; then echo "$d"
+  elif command -v node >/dev/null 2>&1; then dirname "$(command -v node)"
+  else echo "$d"; fi   # fall back (build_ui.sh prints a helpful error if node is missing)
+}
 export -f py node_bin
 export CONDA_BASE
 
